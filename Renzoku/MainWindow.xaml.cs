@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Security.Policy;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,15 +12,14 @@ namespace Renzoku
     public partial class MainWindow : Window
     {
 
-        private int[,] matrix; // Для зберігання згенерованої матриці
-        private int Sizefield = 0;
-
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void GenerateGrid()
+        private int Sizefield = 0;
+
+        private void GenerateGrid(int rows, int columns, int[,] matrix)
         {
             gameGrid.Children.Clear();
             gameGrid.RowDefinitions.Clear();
@@ -29,18 +27,18 @@ namespace Renzoku
 
             gameGrid.HorizontalAlignment = HorizontalAlignment.Center;
 
-            GenerateGridLayout();
-            GenerateTextBoxes();
-            GenerateDots();
+            GenerateGridLayout(rows, columns);
+            GenerateTextBoxes(rows, columns);
+            GenerateDots(rows, columns, matrix);
 
             ShowRandomNumbers(matrix);
 
         }
 
         // Метод для генерації сітки
-        private void GenerateGridLayout()
+        private void GenerateGridLayout(int rows, int columns)
         {
-            for (int i = 0; i < Sizefield * 2 - 1; i++)
+            for (int i = 0; i < rows * 2 - 1; i++)
             {
                 if (i % 2 == 0)
                     gameGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(45) }); // Для текстБоксів
@@ -48,7 +46,7 @@ namespace Renzoku
                     gameGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(10) }); // Для крапок
             }
 
-            for (int j = 0; j < Sizefield * 2 - 1; j++)
+            for (int j = 0; j < columns * 2 - 1; j++)
             {
                 if (j % 2 == 0)
                     gameGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(45) }); // Для текстБоксів
@@ -58,11 +56,11 @@ namespace Renzoku
         }
 
         // Метод для генерації текстБоксів
-        private void GenerateTextBoxes()
+        private void GenerateTextBoxes(int rows, int columns)
         {
-            for (int i = 0; i < Sizefield; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < Sizefield; j++)
+                for (int j = 0; j < columns; j++)
                 {
                     TextBox textBox = new TextBox
                     {
@@ -70,57 +68,51 @@ namespace Renzoku
                         HorizontalAlignment = HorizontalAlignment.Stretch,
                         VerticalAlignment = VerticalAlignment.Stretch,
 
-                        TextAlignment = TextAlignment.Center,
-                        VerticalContentAlignment = VerticalAlignment.Center,
+                        TextAlignment = TextAlignment.Center, 
+                        VerticalContentAlignment = VerticalAlignment.Center, 
                         Padding = new Thickness(0),
-                        BorderThickness = new Thickness(0.7),
-                        BorderBrush = Brushes.Black,
-                        Height = 40,
+                        BorderThickness = new Thickness(0.7), 
+                        BorderBrush = Brushes.Black, 
+                        Height = 40, 
                         FontWeight = FontWeights.SemiBold,
                         FontSize = 18
                     };
 
-                    Grid.SetRow(textBox, i * 2);
-                    Grid.SetColumn(textBox, j * 2);
+                    Grid.SetRow(textBox, i * 2); 
+                    Grid.SetColumn(textBox, j * 2); 
                     gameGrid.Children.Add(textBox);
                 }
             }
         }
 
-        private void GenerateDots()
+        private void GenerateDots(int rows, int columns, int[,] matrix)
         {
-            for (int i = 0; i < Sizefield; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < Sizefield; j++)
+                for (int j = 0; j < columns; j++)
                 {
-                    // Горизонтальна перевірка на зростання та спад
-                    if (j < Sizefield - 1)
+                    // Горизонтальна перевірка на послідовність
+                    if (j < columns - 1 && matrix[i, j] + 1 == matrix[i, j + 1])
                     {
-                        if ((matrix[i, j] + 1 == matrix[i, j + 1]) || (matrix[i, j] - 1 == matrix[i, j + 1])) // Зростання
-                        {
-                            Ellipse dot = CreateDot();
-                            Grid.SetRow(dot, i * 2);
-                            Grid.SetColumn(dot, j * 2 + 1);
-                            gameGrid.Children.Add(dot);
-                        }
+                        Ellipse dot = CreateDot();
+                        // Додаємо крапку в "непарний" стовпець між текстБоксами
+                        Grid.SetRow(dot, i * 2);
+                        Grid.SetColumn(dot, j * 2 + 1);
+                        gameGrid.Children.Add(dot);
                     }
 
-
-                    // Вертикальна перевірка на зростання та спад
-                    if (i < Sizefield - 1)
+                    // Вертикальна перевірка на послідовність
+                    if (i < rows - 1 && matrix[i, j] + 1 == matrix[i + 1, j])
                     {
-                        if ((matrix[i, j] + 1 == matrix[i + 1, j]) || (matrix[i, j] - 1 == matrix[i + 1, j])) // Зростання
-                        {
-                            Ellipse dot = CreateDot();
-                            Grid.SetRow(dot, i * 2 + 1);
-                            Grid.SetColumn(dot, j * 2);
-                            gameGrid.Children.Add(dot);
-                        }
+                        Ellipse dot = CreateDot();
+                        // Додаємо крапку в "непарний" рядок між текстБоксами
+                        Grid.SetRow(dot, i * 2 + 1);
+                        Grid.SetColumn(dot, j * 2);
+                        gameGrid.Children.Add(dot);
                     }
                 }
             }
         }
-
 
         // Метод для створення крапки
         private Ellipse CreateDot()
@@ -182,7 +174,7 @@ namespace Renzoku
         {
             Random random = new Random();
 
-            int numbersToShow = random.Next(1, 3);
+            int numbersToShow = random.Next(1, 3); 
 
             for (int i = 0; i < numbersToShow; i++)
             {
@@ -191,111 +183,101 @@ namespace Renzoku
                 // Генеруємо випадкові позиції для чисел
                 do
                 {
-                    row = random.Next(0, matrix.GetLength(0));
+                    row = random.Next(0, matrix.GetLength(0)); 
                     column = random.Next(0, matrix.GetLength(1));
                 } while (matrix[row, column] == 0);
 
-
+     
                 TextBox textBox = (TextBox)gameGrid.Children.OfType<TextBox>().FirstOrDefault(tb => Grid.GetRow(tb) == row * 2 && Grid.GetColumn(tb) == column * 2);
 
                 if (textBox != null)
                 {
-                    textBox.Text = matrix[row, column].ToString();
+                    textBox.Text = matrix[row, column].ToString(); 
                 }
             }
         }
 
         private void Level4x4_Click(object sender, RoutedEventArgs e)
         {
+            int[,] matrix = GenerateMatrix(4); 
+            GenerateGrid(4, 4, matrix);
             Sizefield = 4;
-            matrix = GenerateMatrix(Sizefield);
-            GenerateGrid();
-
         }
 
         private void Level5x5_Click(object sender, RoutedEventArgs e)
         {
+            int[,] matrix = GenerateMatrix(5); 
+            GenerateGrid(5, 5, matrix);
             Sizefield = 5;
-            matrix = GenerateMatrix(Sizefield);
-            GenerateGrid();
         }
 
         private void Level7x7_Click(object sender, RoutedEventArgs e)
         {
+            int[,] matrix = GenerateMatrix(7); 
+            GenerateGrid(7, 7, matrix);
             Sizefield = 7;
-            matrix = GenerateMatrix(Sizefield);
-            GenerateGrid();
         }
 
         private void Level9x9_Click(object sender, RoutedEventArgs e)
         {
-            Sizefield = 9;
+            int[,] matrix = GenerateMatrix(9);
             this.Width = 520;
             this.Height = 700;
             this.CheckButton.Margin = new Thickness(0, 0, 0, -450);
 
-            matrix = GenerateMatrix(Sizefield);
-            GenerateGrid();
+            GenerateGrid(9, 9, matrix);
+            Sizefield = 9;
 
         }
 
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            int[,] matrix = GenerateMatrix(4); 
+            GenerateGrid(4, 4, matrix);
             Sizefield = 4;
-            matrix = GenerateMatrix(Sizefield);
-            GenerateGrid();
 
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            matrix = GenerateMatrix(Sizefield);
-            GenerateGrid();
+            int[,] matrix = GenerateMatrix(Sizefield);
+            GenerateGrid(Sizefield, Sizefield, matrix);
         }
 
-
-        private void CheckButton_Click(object sender, RoutedEventArgs e)
+        private void CheckField(int rows, int columns, int[,] matrix)
         {
-            // Проходження по всіх позиціях матриці
-            for (int i = 0; i < Sizefield; i++)
+            for (int i = 0; i < rows; i++)
             {
-                for (int j = 0; j < Sizefield; j++)
+                for (int j = 0; j < columns; j++)
                 {
-                    // Отримуємо TextBox за позицією
-                    var textBox = (TextBox)gameGrid.Children.OfType<TextBox>()
-                        .FirstOrDefault(tb => Grid.GetRow(tb) == i * 2 && Grid.GetColumn(tb) == j * 2);
+                    // Отримуємо текст з текстБокса
+                    var textBox = (TextBox)gameGrid.Children[i * 2 * columns + j * 2];
+                    string userInput = textBox.Text;
 
-                    // Скидаємо кольори рамки перед перевіркою
-                    if (textBox != null)
+                    // Перевірка на коректність введеного числа
+                    if (int.TryParse(userInput, out int userNumber))
                     {
-                        textBox.BorderBrush = Brushes.Black; // Скидаємо колір
-
-                        // Отримуємо текст з TextBox
-                        string userInput = textBox.Text;
-
-                        // Перевірка на коректність введеного числа
-                        if (int.TryParse(userInput, out int userNumber))
+                        // Якщо число введено неправильно, підсвічуємо бортик червоним
+                        if (userNumber != matrix[i, j])
                         {
-                            // Якщо число введено неправильно, підсвічуємо бортик червоним
-                            if (userNumber != matrix[i, j])
-                            {
-                                textBox.BorderBrush = Brushes.Red;
-                                textBox.BorderThickness = new Thickness(2);
-
-                            }
+                            textBox.BorderBrush = Brushes.Red;
                         }
                         else
                         {
-                            // Підсвічуємо, якщо введено не число
-                            textBox.BorderBrush = Brushes.Red;
-                            textBox.BorderThickness = new Thickness(2);
-
+                            textBox.BorderBrush = Brushes.Black; // Якщо правильно, скидаємо колір
                         }
+                    }
+                    else
+                    {
+                        textBox.BorderBrush = Brushes.Red; // Підсвічуємо, якщо введено не число
                     }
                 }
             }
         }
-
+        private void CheckButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Перевіряємо значення у текстБоксах за згенерованою матрицею
+            
+        }
     }
 }
