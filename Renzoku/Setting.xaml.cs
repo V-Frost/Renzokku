@@ -41,7 +41,7 @@ namespace Renzokku
 
 
             };
-            ImageSource noteImg = new BitmapImage(new Uri("D:\\4\\ІЗВП\\Renzoku\\Renzoku\\Image\\mark.png"));
+            ImageSource noteImg = new BitmapImage(new Uri("pack://application:,,,/Image/mark.png"));
             note.Content = new Image { Source = noteImg };
 
             note.Click += Note_Click;
@@ -55,7 +55,7 @@ namespace Renzokku
                 HorizontalAlignment = HorizontalAlignment.Left 
 
             };
-            ImageSource eraserImg = new BitmapImage(new Uri("D:\\4\\ІЗВП\\Renzoku\\Renzoku\\Image\\eraser.png"));
+            ImageSource eraserImg = new BitmapImage(new Uri("pack://application:,,,/Image/eraser.png"));
             eraser.Content = new Image { Source = eraserImg };
             eraser.Click += Eraser_Click;
 

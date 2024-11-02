@@ -140,7 +140,9 @@ namespace Renzoku
             };
 
             settingsGameField.Click += SettingsGameField_Click;
-            ImageSource setting = new BitmapImage(new Uri("D:\\4\\ІЗВП\\Renzoku\\Renzoku\\Image\\settings.png"));
+
+
+            ImageSource setting = new BitmapImage(new Uri("pack://application:,,,/Image/settings.png"));
             settingsGameField.Content = new Image { Source = setting };
 
             Button checkGamingField = new Button
@@ -161,7 +163,7 @@ namespace Renzoku
             };
 
             resetButton.Click += ResetButton_Click;
-            ImageSource reset = new BitmapImage(new Uri("D:\\4\\ІЗВП\\Renzoku\\Renzoku\\Image\\refresh.png"));
+            ImageSource reset = new BitmapImage(new Uri("pack://application:,,,/Image/refresh.png"));
             resetButton.Content = new Image { Source = reset };
 
             buttonPanel.Children.Add(settingsGameField);
