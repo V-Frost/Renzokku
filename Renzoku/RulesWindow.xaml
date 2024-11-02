@@ -1,0 +1,22 @@
+﻿<Window x:Class="Renzokku.RulesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Renzokku"
+        mc:Ignorable="d"
+        Title="RulesWindow" Height="259" Width="505">
+    <Grid>
+        <TextBlock TextWrapping="Wrap" Margin="10" FontSize="14">
+    <Run Text="Правила прості. Необхідно заповнити таблицю числами так, щоб виконувалися такі правила:"/>
+    <LineBreak/>
+    <LineBreak/>
+    <Run Text="  - числа варіюються від 1 до величини розміру таблиці, наприклад для головоломки розміром 5x5 числа будуть у діапазоні від 1 до 5."/>
+    <LineBreak/>
+    <Run Text="  - у кожній колонці та кожному стовпчику числа не повинні повторюватися."/>
+    <LineBreak/>
+    <Run Text="  - крапка між двома комірками таблиці означає, що числа в цих комірках є сусідами в числовому ряду. Якщо крапки між комірками немає, значить, числа в цих комірках НЕ ПОВИННІ БУТИ сусідами."/>
+        </TextBlock>
+
+    </Grid>
+</Window>
